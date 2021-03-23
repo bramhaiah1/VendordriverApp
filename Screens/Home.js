@@ -1,41 +1,27 @@
-import React from 'react'
+import React, { Component, useEffect } from "react";
 import { Text,View,StyleSheet,FlatList,TextInput,Image,ScrollView,TouchableOpacity,Dimensions} from "react-native";
 import { EvilIcons } from '@expo/vector-icons';
 import { Entypo } from "@expo/vector-icons";
+import { connect } from "react-redux";
+import Cate from './category'
 import { Avatar } from 'react-native-elements';
 import Avatarmodel from './Avatar'
 import {scale, verticalScale, moderateScale} from "./style"
 import { SliderBox } from "react-native-image-slider-box";
 import Icon from "react-native-vector-icons/FontAwesome5";
-
 import { AntDesign } from '@expo/vector-icons';
+import {fetchProducts} from '../reducers/action'
 // const {width} = Dimensions.get('screen');
 // const height = width * 0.5;
-const _keyExtractor = (item, idx) => item.id;
-   
-
-  const _renderItem = ({ item }) => (
-    <Avatarmodel item={ item }  />
-  );
-  const item3 = [
-    { id: 0, name: 'Order id' },
-    { id: 1, name: 'Order id' },
-    { id: 2, name: 'Order id'   },
-    { id: 3, name: 'Order id' },
-    { id: 4, name: 'Order id'   },
-    { id: 5, name: 'Order id',   },
-  ];
 const images =[
-    "https://sukhis.com/wp-content/uploads/2017/06/Indian-Food-Guide.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHCoXdQX18ZgxblJIZCxAXNz-OB_B7kNDdTw&usqp=CAU",
-    "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-    
-
-    
+  "https://sukhis.com/wp-content/uploads/2017/06/Indian-Food-Guide.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHCoXdQX18ZgxblJIZCxAXNz-OB_B7kNDdTw&usqp=CAU",
+  "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+  "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
 ]
+
 const images1=[
   {id:1,image:require("../assets/Accesories_category.jpg"),Text:"Accessories"},
   {id:2,image:require("../assets/Baby_category.jpg"),Text:"Baby"},
@@ -49,8 +35,21 @@ const images1=[
 
 
 ]
+class Home extends Component{
+ _keyExtractor = (item, idx) => item.id;
+   
+   _renderItem = ({ item }) => (
+    <Avatarmodel item={ item }  />
+  );
+  
+ componentDidMount(){
+   this.props.fetchProducts()
+   alert(JSON.stringify(this.props.products))
 
-const uiDesign = () => {
+ }
+render() {
+     // alert(JSON.stringify(this.props.products))
+
     return(
         <View style={{flex:1}}>
            
@@ -97,7 +96,7 @@ left:scale(30)
 
 
 <Text style={{fontSize:20,fontWeight:"bold",top:scale(50)}}>Category</Text>
-<TouchableOpacity style={{alignItems:"flex-end"}}><Text style={{color:"#808080"}}>See All({images1.length-1})</Text></TouchableOpacity>
+<TouchableOpacity  style={{alignItems:"flex-end"}}><Text style={{color:"#808080"}}>See All({images1.length-1})</Text></TouchableOpacity>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}style={{ width:verticalScale(520),height:verticalScale(300),paddingLeft:scale(30),}}>
                 {
                     images1.map((item,index) => (
@@ -131,17 +130,23 @@ left:scale(30)
        <Image source={{ uri: item }}  />
 
 </TouchableOpacity> 
+
                 </View>    ))
                 }
                 </ScrollView>
-         
+                <Cate/>
                 </ScrollView>
-                
             </View>
-            
+           
+
         </View>
     )
-}
+    
+}}
+const mapStateToProps = (state) => ({
+  products: state,
+});
+
 const styles = StyleSheet.create({
     textView:{
         flex:1,
@@ -201,4 +206,4 @@ const styles = StyleSheet.create({
     }
    
 })
-export default uiDesign
+export default connect(mapStateToProps, {fetchProducts})(Home);
